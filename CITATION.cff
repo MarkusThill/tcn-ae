@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite both the software itself and the paper
+  it implements (preferred-citation below).
+title: tcn-ae
+abstract: >-
+  A temporal convolutional autoencoder (TCN-AE) for unsupervised anomaly
+  detection in multivariate time series.
+type: software
+license: MIT
+repository-code: "https://github.com/MarkusThill/tcn-ae"
+url: "https://markusthill.github.io/tcn-ae/"
+version: 0.0.1
+authors:
+  - given-names: Markus
+    family-names: Thill
+keywords:
+  - anomaly detection
+  - autoencoder
+  - temporal convolutional network
+  - time series
+  - unsupervised learning
+preferred-citation:
+  type: article
+  title: >-
+    Temporal convolutional autoencoder for unsupervised anomaly detection in
+    time series
+  authors:
+    - given-names: Markus
+      family-names: Thill
+    - given-names: Wolfgang
+      family-names: Konen
+    - given-names: Hao
+      family-names: Wang
+    - given-names: Thomas
+      family-names: Bäck
+  journal: Applied Soft Computing
+  volume: 112
+  start: 107751
+  year: 2021
+  month: 11
+  issn: 1568-4946
+  doi: 10.1016/j.asoc.2021.107751

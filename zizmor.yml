@@ -1,0 +1,11 @@
+# zizmor policy. Default is blanket hash-pinning for every action, which is a lot of
+# churn for first-party actions. We require a tag for actions published by orgs we
+# already trust to run in CI, and a full commit hash for anything else.
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        actions/*: ref-pin
+        astral-sh/*: ref-pin
+        pypa/*: ref-pin
+        "*": hash-pin

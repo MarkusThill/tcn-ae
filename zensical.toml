@@ -1,0 +1,66 @@
+# Zensical (successor to Material for MkDocs, by the same team).
+#   uv run --group docs zensical serve   # live preview
+#   uv run --group docs zensical build   # -> site/
+
+[project]
+site_name = "tcn-ae"
+site_description = "A temporal convolutional autoencoder for anomaly detection in multivariate time series"
+site_author = "Markus Thill"
+site_url = "https://markusthill.github.io/tcn-ae/"
+repo_url = "https://github.com/MarkusThill/tcn-ae"
+repo_name = "MarkusThill/tcn-ae"
+copyright = "Copyright &copy; 2025 Markus Thill"
+
+nav = [
+    { "Home" = "index.md" },
+    { "API reference" = "reference.md" },
+]
+
+[project.theme]
+language = "en"
+features = [
+    "content.code.copy",
+    "navigation.footer",
+    "navigation.instant",
+    "navigation.top",
+    "search.highlight",
+    "toc.follow",
+]
+
+[[project.theme.palette]]
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+# API reference is generated from docstrings by mkdocstrings, which Zensical
+# runs through its MkDocs plugin compatibility layer.
+[project.plugins.mkdocstrings]
+default_handler = "python"
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "google"
+show_source = true
+show_root_heading = true
+members_order = "source"
+separate_signature = true
+signature_crossrefs = true
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.toc]
+permalink = true
+[project.markdown_extensions.pymdownx.arithmatex]
+generic = true
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.superfences]

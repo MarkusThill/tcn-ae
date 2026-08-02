@@ -1,0 +1,109 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tcn-ae"
+version = "0.0.1"
+description = "A temporal convolutional autoencoder for anomaly detection in multivariate time series"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Markus Thill", email = "diedackel@gmail.com" }]
+keywords = [
+    "anomaly-detection",
+    "autoencoder",
+    "temporal-convolutional-network",
+    "time-series",
+    "unsupervised-learning",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+# TensorFlow is a hard dependency, not an extra: Keras 3 fails on import with no framework
+# installed. TensorFlow only publishes cp313 wheels from 2.20 onwards.
+dependencies = [
+    "keras>=3.0",
+    "tensorflow>=2.16; python_version < '3.13'",
+    "tensorflow>=2.20; python_version >= '3.13'",
+]
+
+[project.optional-dependencies]
+# Adds the torch Keras backend (KERAS_BACKEND=torch). Does not replace TensorFlow.
+torch = ["torch>=2.0"]
+
+[project.urls]
+Homepage = "https://github.com/MarkusThill/tcn-ae"
+Repository = "https://github.com/MarkusThill/tcn-ae"
+Issues = "https://github.com/MarkusThill/tcn-ae/issues"
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.17",
+    "nbstripout>=0.8",
+    "prek>=0.4.11",
+    "pyrefly>=1.2",
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+    "ty>=0.0.65",
+    "zizmor>=1.0",
+    { include-group = "docs" },
+    { include-group = "notebooks" },
+]
+docs = [
+    # Alpha software: pin tightly, the docs CI job catches regressions.
+    "zensical>=0.0.52,<0.1",
+    "mkdocstrings-python>=2.0",
+]
+notebooks = ["nbmake>=1.5"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tcn_ae"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "NPY", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Coverage is opt-in (`pytest --cov`) so local runs stay fast; CI always passes it.
+addopts = "--strict-markers"
+
+[tool.coverage.run]
+source = ["src/tcn_ae"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]
+
+# Primary type checker. If pyrefly and ty disagree, pyrefly wins.
+[tool.pyrefly]
+project-includes = ["src", "tests"]
+python-version = "3.11"
+
+# Experimental, advisory only: `ty` is pre-1.0 and never gates CI.
+[tool.ty.environment]
+python-version = "3.11"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_provider = "uv"
+version_scheme = "pep440"
+update_changelog_on_bump = true
+major_version_zero = true
