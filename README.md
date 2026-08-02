@@ -92,32 +92,21 @@ On commit this runs file hygiene checks, `ruff check --fix`, `ruff format`, `pyr
 `nbstripout` (strips notebook outputs), and `zizmor`. On `commit-msg` it validates the
 message with commitizen.
 
-### Commits and releases (commitizen)
+### Commit messages (commitizen)
 
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) and are
-enforced by the `commit-msg` hook. Use the prompt if you like:
+enforced by the `commit-msg` hook.
 
 ```bash
 uv run cz commit            # interactive, guided commit message
-uv run cz bump              # bump version, update CHANGELOG.md, create the v* tag
-git push --follow-tags
 ```
 
-`cz bump` derives the new version from the commits since the last tag, writes it to
-`[project] version` in `pyproject.toml` and to `uv.lock` (`version_provider = "uv"`), and
-updates `CHANGELOG.md`. The package exposes that same version at runtime via
-`importlib.metadata`, so there is a single source of truth — **do not** switch back to a
-dynamic/hatch version, it would break `cz bump`.
+The commit type determines the next version: `fix:` → patch, `feat:` → minor. With
+`major_version_zero = true` the project stays on `0.x` until you deliberately go to 1.0.
 
-Pushing the tag triggers [.github/workflows/release.yml](.github/workflows/release.yml),
-which builds, publishes to PyPI via Trusted Publishing (OIDC — no API token is stored), and
-creates the GitHub release.
-
-> [!WARNING]
-> `annotated_tag = true` in `[tool.commitizen]` is load-bearing. `git push --follow-tags`
-> pushes *annotated* tags only, and commitizen creates lightweight ones by default. Without
-> it the bump commit is pushed, the tag silently stays local, and no release ever runs.
-> If you change it, push tags explicitly with `git push origin "v$(uv run cz version --project)"`.
+`cz bump` writes the version to `[project] version` in `pyproject.toml` and to `uv.lock`
+(`version_provider = "uv"`); the package reads it back at runtime via `importlib.metadata`.
+**Do not** switch to a dynamic/hatch version, it would break `cz bump`.
 
 ### Publishing setup (one-time)
 
@@ -137,6 +126,56 @@ needing separate accounts, both with 2FA — go to *Publishing* → *Add a pendi
 
 Then create matching GitHub environments under *Settings* → *Environments*, and enable Pages
 with "GitHub Actions" as the source.
+
+### Cutting a release to PyPI
+
+From a clean `main` that is up to date with `origin`:
+
+```bash
+# 1. Preview the version derived from the commits since the last tag
+uv run cz bump --dry-run
+
+# 2. Bump: updates pyproject.toml, uv.lock and CHANGELOG.md, commits, creates the v* tag
+uv run cz bump
+
+# 3. Push the commit *and* the tag
+git push --follow-tags
+
+# 4. Confirm the tag actually arrived — this is where releases usually fail silently
+git ls-remote --tags origin
+
+# 5. Watch the release run
+gh run watch
+```
+
+Step 3 is the one that catches people: a plain `git push` does **not** push tags. The bump
+commit lands, `main` looks correct, and nothing is ever released. If step 4 prints no tag,
+push it explicitly:
+
+```bash
+git push origin "v$(uv run cz version --project)"
+```
+
+The tag push triggers [release.yml](.github/workflows/release.yml): build → `twine check` →
+publish to PyPI via Trusted Publishing (OIDC, no API token stored) → GitHub release with the
+artifacts attached.
+
+> [!WARNING]
+> `annotated_tag = true` in `[tool.commitizen]` is load-bearing. `git push --follow-tags`
+> pushes *annotated* tags only, and commitizen creates lightweight ones by default.
+
+#### If a release fails
+
+A version number is consumed permanently on PyPI — a deleted release cannot be re-uploaded
+under the same version. If the run failed **before** anything was uploaded (a bad publisher
+config, a failing build), drop the tag, fix, and retag:
+
+```bash
+git push --delete origin v0.1.0
+git tag -d v0.1.0
+```
+
+If the upload already succeeded, do not try to reuse the version — bump to a new one.
 
 ### Rehearsing a release on TestPyPI
 
