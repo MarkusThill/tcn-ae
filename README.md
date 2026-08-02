@@ -161,8 +161,11 @@ publish to PyPI via Trusted Publishing (OIDC, no API token stored) → GitHub re
 artifacts attached.
 
 > [!WARNING]
-> `annotated_tag = true` in `[tool.commitizen]` is load-bearing. `git push --follow-tags`
-> pushes *annotated* tags only, and commitizen creates lightweight ones by default.
+> Do not remove `annotated_tag = true` from `[tool.commitizen]`. Git has two kinds of tags:
+> *annotated* ones are real objects carrying a tagger, date and message, while *lightweight*
+> ones are just a name pointing at a commit. `git push --follow-tags` pushes annotated tags
+> only, and commitizen creates lightweight ones unless told otherwise — so without that
+> setting `cz bump` produces a tag the push silently ignores, and no release ever runs.
 
 #### If a release fails
 
