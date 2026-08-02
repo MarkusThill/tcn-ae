@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tcn-ae"
-version = "0.0.2"
+version = "0.0.3"
 description = "A temporal convolutional autoencoder for anomaly detection in multivariate time series"
 readme = "README.md"
 license = "MIT"
