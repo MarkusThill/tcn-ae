@@ -108,13 +108,10 @@ The commit type determines the next version: `fix:` → patch, `feat:` → minor
 (`version_provider = "uv"`); the package reads it back at runtime via `importlib.metadata`.
 **Do not** switch to a dynamic/hatch version, it would break `cz bump`.
 
-### Publishing setup (one-time)
+### Trusted Publishing configuration
 
-Both registries use Trusted Publishing, so no API token is ever stored. PyPI supports
-*pending* publishers, meaning the project does not have to exist yet.
-
-On [pypi.org](https://pypi.org) and [test.pypi.org](https://test.pypi.org) — separate sites
-needing separate accounts, both with 2FA — go to *Publishing* → *Add a pending publisher*:
+Already configured on both registries — nothing to do for a normal release. This is the
+trust relationship that lets the workflows publish without any API token stored in the repo.
 
 | Field | PyPI | TestPyPI |
 | --- | --- | --- |
@@ -124,8 +121,11 @@ needing separate accounts, both with 2FA — go to *Publishing* → *Add a pendi
 | Workflow | `release.yml` | `release-testpypi.yml` |
 | Environment | `pypi` | `testpypi` |
 
-Then create matching GitHub environments under *Settings* → *Environments*, and enable Pages
-with "GitHub Actions" as the source.
+Renaming the repository, the workflow file, or the GitHub environment breaks the match and
+publishing fails with an OIDC error — update the publisher on the registry to match. The
+same table applies when setting up a fork: before a project exists, it is added under
+*Publishing* → *Add a pending publisher*; afterwards it lives in the project's own
+*Publishing* settings.
 
 ### Cutting a release to PyPI
 
