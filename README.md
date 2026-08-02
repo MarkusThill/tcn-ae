@@ -8,9 +8,11 @@ This is a reference implementation of:
 > [*Temporal convolutional autoencoder for unsupervised anomaly detection in time series.*](https://doi.org/10.1016/j.asoc.2021.107751)
 > Applied Soft Computing 112 (2021), 107751.
 
-> [!NOTE]
-> Early development — the package is being built up step by step and the public API is not
-> stable yet.
+> [!WARNING]
+> **Not ready for use.** The package currently contains no model implementation — it is
+> packaging and infrastructure only, and installing it gives you nothing usable yet. The
+> released versions exist to validate the release pipeline, not to be depended on.
+> The TCN-AE implementation and a stable public API are still to come.
 
 ## Installation
 

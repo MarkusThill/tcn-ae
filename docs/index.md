@@ -9,6 +9,13 @@ This package provides a reference implementation of the algorithm described in:
 > *Temporal convolutional autoencoder for unsupervised anomaly detection in time series.*
 > Applied Soft Computing, 2021.
 
+!!! warning "Not ready for use"
+
+    The package currently contains no model implementation — it is packaging and
+    infrastructure only, and installing it gives you nothing usable yet. The released
+    versions exist to validate the release pipeline, not to be depended on. The TCN-AE
+    implementation and a stable public API are still to come.
+
 ## Installation
 
 ```bash
@@ -33,6 +40,7 @@ install and run time, not by a separate code path.
 
 ## Status
 
-Early development. The public API is not yet stable.
+No model code yet. The installation instructions above describe how the package *will* be
+used once the implementation lands; today `tcn_ae` exposes only `__version__`.
 
 See the [API reference](reference.md) for what is currently available.
