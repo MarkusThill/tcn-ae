@@ -103,6 +103,9 @@ python-version = "3.11"
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "v$version"
+# Required: `git push --follow-tags` only pushes annotated tags, and the release
+# workflow triggers on the tag. Lightweight tags would stay local.
+annotated_tag = true
 version_provider = "uv"
 version_scheme = "pep440"
 update_changelog_on_bump = true

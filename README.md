@@ -113,6 +113,12 @@ Pushing the tag triggers [.github/workflows/release.yml](.github/workflows/relea
 which builds, publishes to PyPI via Trusted Publishing (OIDC — no API token is stored), and
 creates the GitHub release.
 
+> [!WARNING]
+> `annotated_tag = true` in `[tool.commitizen]` is load-bearing. `git push --follow-tags`
+> pushes *annotated* tags only, and commitizen creates lightweight ones by default. Without
+> it the bump commit is pushed, the tag silently stays local, and no release ever runs.
+> If you change it, push tags explicitly with `git push origin "v$(uv run cz version --project)"`.
+
 ### Publishing setup (one-time)
 
 Both registries use Trusted Publishing, so no API token is ever stored. PyPI supports
